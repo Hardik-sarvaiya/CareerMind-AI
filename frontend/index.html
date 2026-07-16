@@ -810,8 +810,9 @@ select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='htt
 ═══════════════════════════════════════════════════ */
 'use strict';
 
-const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? 'https://careermind-ai-seven.vercel.app' : '';
+const API = "https://careermind-ai-seven.vercel.app";
+// const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+//   ? 'https://careermind-ai-seven.vercel.app' : '';
 
 // No highlight callback in marked — applying hljs during streaming is O(n²)
 // and freezes the JS main thread, causing the browser to drop incoming bytes.
