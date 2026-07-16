@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CareerMind AI — Your AI Career Mentor</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<!-- marked.js for markdown rendering -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<!-- highlight.js for code blocks -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════
+   RESET & ROOT
+═══════════════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --p:#7C6EFA; --p2:#9B8FFB; --p3:rgba(124,110,250,0.12); --pb:rgba(124,110,250,0.25);
+  --t:#2DD4BF; --t2:rgba(45,212,191,0.12);
+  --bg:#080A0F; --s1:#0D1017; --s2:#111520; --s3:#161B28;
+  --bdr:#1E2235; --bdr2:#252B40;
+  --tx:#E2E4EE; --tx2:#9499B0; --tx3:#5C6180;
+  --gr:#34D399; --am:#FBBF24; --rd:#F87171; --bl:#60A5FA;
+  --r8:8px; --r12:12px; --r16:16px; --r20:20px; --r24:24px;
+  --sh:0 4px 24px rgba(0,0,0,0.4);
+  --sh2:0 8px 40px rgba(0,0,0,0.5);
+  --glow:0 0 30px rgba(124,110,250,0.15);
+}
+
+html,body{height:100%;font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tx);overflow:hidden;}
+
+/* ═══════════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════════ */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:#3A4060;}
+
+/* ═══════════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════════ */
+.app{display:flex;height:100vh;position:relative;}
+
+/* ═══════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════ */
+.sidebar{
+  width:240px;flex-shrink:0;
+  background:linear-gradient(180deg,var(--s1) 0%,var(--bg) 100%);
+  border-right:1px solid var(--bdr);
+  display:flex;flex-direction:column;
+  position:relative;z-index:10;
+}
+.sidebar::after{
+  content:'';position:absolute;top:0;right:0;width:1px;height:100%;
+  background:linear-gradient(180deg,transparent,var(--p),transparent);
+  opacity:0.3;
+}
+.logo{padding:24px 18px 20px;border-bottom:1px solid var(--bdr);}
+.logo-icon{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--p),var(--t));
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;margin-bottom:12px;
+  box-shadow:0 4px 16px rgba(124,110,250,0.35);
+}
+.logo h1{font-size:15px;font-weight:700;color:var(--tx);letter-spacing:-0.3px;}
+.logo p{font-size:10px;color:var(--tx3);margin-top:3px;font-family:'JetBrains Mono',monospace;}
+
+.nav{flex:1;padding:10px 8px;overflow-y:auto;}
+.nav-section{font-size:9px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:1px;padding:14px 10px 6px;}
+
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:var(--r8);
+  cursor:pointer;font-size:13px;font-weight:500;color:var(--tx2);
+  transition:all 0.18s cubic-bezier(.4,0,.2,1);
+  margin-bottom:1px;border:none;background:none;width:100%;text-align:left;
+  position:relative;
+}
+.nav-item:hover{background:var(--s3);color:var(--tx);}
+.nav-item.active{
+  background:linear-gradient(90deg,var(--p3),transparent);
+  color:var(--p2);
+  border-left:2px solid var(--p);
+  padding-left:10px;
+}
+.nav-item.active .nav-badge{opacity:1;}
+.nav-emoji{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.nav-label{flex:1;}
+.nav-badge{
+  font-size:9px;background:var(--p3);color:var(--p);
+  padding:2px 7px;border-radius:20px;border:1px solid var(--pb);
+  font-family:'JetBrains Mono',monospace;opacity:0;transition:opacity 0.2s;
+}
+
+.sidebar-footer{
+  padding:14px 16px;border-top:1px solid var(--bdr);
+  display:flex;align-items:center;gap:8px;
+}
+.footer-dot{width:6px;height:6px;border-radius:50%;background:var(--gr);animation:pulse-dot 2s infinite;}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,0.5)}50%{box-shadow:0 0 0 5px rgba(52,211,153,0)}}
+.footer-text{font-size:10px;color:var(--tx3);font-family:'JetBrains Mono',monospace;line-height:1.4;}
+.footer-text b{color:var(--gr);font-weight:500;}
+
+/* ═══════════════════════════════════════════════════
+   MAIN AREA
+═══════════════════════════════════════════════════ */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+
+.topbar{
+  padding:0 28px;height:58px;
+  border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(13,16,23,0.8);backdrop-filter:blur(20px);
+  flex-shrink:0;position:sticky;top:0;z-index:5;
+}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.topbar-icon{font-size:20px;}
+.topbar-title{font-size:15px;font-weight:600;color:var(--tx);}
+.topbar-sub{font-size:11px;color:var(--tx3);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+
+.status-pill{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;padding:5px 12px;border-radius:20px;
+  font-family:'JetBrains Mono',monospace;
+  background:var(--s2);border:1px solid var(--bdr);color:var(--tx2);
+  transition:all 0.3s;
+}
+.status-pill.generating{background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.3);color:var(--am);}
+.status-pill.done{background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.3);color:var(--gr);}
+.status-pill.error{background:rgba(248,113,113,0.1);border-color:rgba(248,113,113,0.3);color:var(--rd);}
+.status-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.status-dot.spin{animation:spin-dot 1s linear infinite;}
+@keyframes spin-dot{to{transform:rotate(360deg)}}
+
+.model-badge{
+  font-size:10px;padding:4px 10px;border-radius:6px;
+  background:var(--p3);border:1px solid var(--pb);color:var(--p2);
+  font-family:'JetBrains Mono',monospace;font-weight:500;
+}
+
+.content{flex:1;overflow-y:auto;padding:28px;}
+
+/* ═══════════════════════════════════════════════════
+   PANELS
+═══════════════════════════════════════════════════ */
+.panel{display:none;animation:fadeSlide 0.25s ease;}
+.panel.active{display:block;}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════════════════════════
+   CARDS
+═══════════════════════════════════════════════════ */
+.card{
+  background:var(--s1);border:1px solid var(--bdr);
+  border-radius:var(--r16);padding:22px;
+  transition:border-color 0.2s;
+}
+.card:hover{border-color:var(--bdr2);}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.card-icon{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+  background:var(--p3);flex-shrink:0;
+}
+.card-title{font-size:13px;font-weight:600;color:var(--tx);}
+.card-sub{font-size:11px;color:var(--tx3);margin-top:1px;}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+
+/* ═══════════════════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════════════════ */
+.form-group{margin-bottom:16px;}
+label{
+  display:block;font-size:11px;font-weight:600;color:var(--tx3);
+  text-transform:uppercase;letter-spacing:0.5px;margin-bottom:7px;
+}
+textarea,input[type=text],select{
+  width:100%;background:var(--s2);
+  border:1px solid var(--bdr);border-radius:var(--r8);
+  padding:10px 14px;color:var(--tx);
+  font-family:'Space Grotesk',sans-serif;font-size:13px;
+  outline:none;transition:all 0.18s;resize:vertical;
+  -webkit-appearance:none;
+}
+textarea:focus,input[type=text]:focus,select:focus{
+  border-color:var(--p);
+  box-shadow:0 0 0 3px rgba(124,110,250,0.1),var(--glow);
+  background:var(--s3);
+}
+textarea::placeholder,input::placeholder{color:var(--tx3);}
+select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235C6180' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
+
+/* ═══════════════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 20px;border-radius:var(--r8);border:none;cursor:pointer;
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;
+  transition:all 0.18s cubic-bezier(.4,0,.2,1);white-space:nowrap;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--p) 0%,#5B4FD4 100%);color:#fff;
+  box-shadow:0 4px 16px rgba(124,110,250,0.3);
+}
+.btn-primary:hover:not(:disabled){
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(124,110,250,0.4);
+  background:linear-gradient(135deg,var(--p2) 0%,#6B5FE4 100%);
+}
+.btn-primary:active:not(:disabled){transform:translateY(0);}
+.btn-primary:disabled{opacity:0.45;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-ghost{background:var(--s2);color:var(--tx2);border:1px solid var(--bdr);}
+.btn-ghost:hover{background:var(--s3);color:var(--tx);border-color:var(--bdr2);}
+.btn-full{width:100%;}
+
+/* ═══════════════════════════════════════════════════
+   AI RESPONSE OUTPUT
+═══════════════════════════════════════════════════ */
+.ai-output{
+  background:var(--s2);border:1px solid var(--bdr);
+  border-radius:var(--r12);padding:20px;
+  min-height:140px;font-size:13.5px;line-height:1.8;
+  color:var(--tx);overflow-y:auto;max-height:60vh;
+  transition:border-color 0.2s;
+  position:relative;
+}
+.ai-output.streaming{border-color:var(--pb);}
+.ai-output.streaming::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--p),var(--t),var(--p));
+  background-size:200% 100%;animation:shimmer-bar 1.5s linear infinite;
+  border-radius:0 0 var(--r12) var(--r12);
+}
+@keyframes shimmer-bar{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Thinking state */
+.thinking{display:flex;align-items:center;gap:12px;padding:16px 0;}
+.thinking-icon{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--p3),var(--t2));
+  border:1px solid var(--pb);display:flex;align-items:center;justify-content:center;
+  font-size:15px;animation:float 2s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.thinking-dots{display:flex;gap:5px;align-items:center;}
+.thinking-dots span{
+  width:7px;height:7px;border-radius:50%;background:var(--p);
+  animation:dot-bounce 1.2s ease-in-out infinite;
+}
+.thinking-dots span:nth-child(2){animation-delay:0.2s;background:var(--p2);}
+.thinking-dots span:nth-child(3){animation-delay:0.4s;background:var(--t);}
+@keyframes dot-bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+.thinking-text{font-size:12px;color:var(--tx3);font-family:'JetBrains Mono',monospace;}
+
+/* Markdown output styles */
+.ai-output h1,.ai-output h2,.ai-output h3,.ai-output h4{
+  color:var(--tx);font-weight:700;margin:18px 0 10px;line-height:1.3;
+}
+.ai-output h1{font-size:18px;}
+.ai-output h2{font-size:16px;border-bottom:1px solid var(--bdr);padding-bottom:6px;}
+.ai-output h3{font-size:14px;color:var(--p2);}
+.ai-output h4{font-size:13px;color:var(--tx2);}
+.ai-output p{margin:8px 0;color:var(--tx);}
+.ai-output ul,.ai-output ol{padding-left:20px;margin:10px 0;}
+.ai-output li{margin:5px 0;line-height:1.7;}
+.ai-output strong{color:var(--p2);font-weight:600;}
+.ai-output em{color:var(--t);font-style:italic;}
+.ai-output code{
+  background:var(--s3);border:1px solid var(--bdr);
+  color:var(--t);padding:2px 7px;border-radius:5px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+}
+.ai-output pre{
+  background:var(--s3);border:1px solid var(--bdr);
+  border-radius:var(--r8);padding:16px;margin:12px 0;overflow-x:auto;
+}
+.ai-output pre code{
+  background:none;border:none;padding:0;color:inherit;font-size:12.5px;
+}
+.ai-output blockquote{
+  border-left:3px solid var(--p);
+  background:var(--p3);border-radius:0 var(--r8) var(--r8) 0;
+  padding:12px 16px;margin:12px 0;color:var(--tx2);font-style:italic;
+}
+.ai-output table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;}
+.ai-output th{
+  background:var(--p3);color:var(--p2);font-weight:600;
+  padding:10px 14px;text-align:left;border:1px solid var(--pb);
+}
+.ai-output td{padding:9px 14px;border:1px solid var(--bdr);color:var(--tx);}
+.ai-output tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+.ai-output hr{border:none;border-top:1px solid var(--bdr);margin:16px 0;}
+.ai-output a{color:var(--p2);text-decoration:underline;text-underline-offset:2px;}
+.ai-output .task-list-item{list-style:none;margin-left:-20px;}
+.ai-output .task-list-item input{margin-right:8px;accent-color:var(--p);}
+
+/* Cursor blink */
+.cursor{display:inline-block;width:2px;height:15px;background:var(--p);margin-left:2px;vertical-align:middle;animation:blink-cursor 0.9s step-end infinite;}
+@keyframes blink-cursor{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Placeholder */
+.ai-placeholder{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:160px;gap:10px;color:var(--tx3);
+}
+.ai-placeholder-icon{font-size:32px;opacity:0.4;}
+.ai-placeholder-text{font-size:12px;text-align:center;line-height:1.6;max-width:200px;}
+
+/* ═══════════════════════════════════════════════════
+   HOME PANEL
+═══════════════════════════════════════════════════ */
+.hero{
+  background:linear-gradient(135deg,rgba(124,110,250,0.1) 0%,rgba(45,212,191,0.05) 60%,transparent 100%);
+  border:1px solid var(--pb);border-radius:var(--r24);padding:32px;
+  margin-bottom:24px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,110,250,0.15),transparent 70%);
+  pointer-events:none;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;font-weight:600;color:var(--p2);
+  background:var(--p3);border:1px solid var(--pb);
+  padding:4px 10px;border-radius:20px;
+  font-family:'JetBrains Mono',monospace;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;
+}
+.hero h2{
+  font-size:26px;font-weight:800;letter-spacing:-0.5px;
+  background:linear-gradient(135deg,#fff 0%,var(--p2) 50%,var(--t) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:10px;line-height:1.2;
+}
+.hero p{font-size:14px;color:var(--tx2);line-height:1.7;max-width:560px;}
+
+.stat-card{
+  background:var(--s2);border:1px solid var(--bdr);border-radius:var(--r12);
+  padding:18px;text-align:center;transition:all 0.2s;cursor:default;
+}
+.stat-card:hover{border-color:var(--bdr2);transform:translateY(-2px);box-shadow:var(--sh);}
+.stat-num{font-size:28px;font-weight:800;margin-bottom:5px;line-height:1;}
+.stat-lbl{font-size:11px;color:var(--tx3);}
+
+.flow-card{background:var(--s2);border:1px solid var(--bdr);border-radius:var(--r16);padding:22px;}
+.flow-steps{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.flow-step{
+  display:flex;align-items:center;gap:6px;
+  background:var(--s3);border:1px solid var(--bdr);
+  border-radius:var(--r8);padding:7px 12px;font-size:12px;font-weight:500;color:var(--tx2);
+  cursor:pointer;transition:all 0.15s;
+}
+.flow-step:hover{border-color:var(--p);color:var(--p2);background:var(--p3);}
+.flow-arrow{color:var(--tx3);font-size:12px;}
+
+/* ═══════════════════════════════════════════════════
+   ATS SCORE RING
+═══════════════════════════════════════════════════ */
+.ats-score-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  padding:20px 0 14px;
+}
+.ats-ring-container{position:relative;width:130px;height:130px;}
+.ats-ring-container svg{transform:rotate(-90deg);}
+.ats-center{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;
+}
+.ats-score-num{font-size:28px;font-weight:800;color:var(--p);line-height:1;}
+.ats-score-label{font-size:9px;color:var(--tx3);margin-top:3px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;}
+.ats-grade{
+  margin-top:10px;font-size:12px;font-weight:600;
+  padding:4px 16px;border-radius:20px;
+}
+
+/* ═══════════════════════════════════════════════════
+   CHAT
+═══════════════════════════════════════════════════ */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 160px);}
+.chat-messages{
+  flex:1;overflow-y:auto;
+  display:flex;flex-direction:column;gap:14px;
+  padding:8px 0 20px;
+}
+.msg{
+  display:flex;gap:10px;align-items:flex-start;
+  animation:msg-in 0.2s ease;
+}
+@keyframes msg-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg-avatar{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  margin-top:2px;
+}
+.msg-user .msg-avatar{background:linear-gradient(135deg,var(--p),#5B4FD4);}
+.msg-ai .msg-avatar{background:linear-gradient(135deg,var(--s3),var(--s2));border:1px solid var(--bdr);}
+.msg-user{flex-direction:row-reverse;}
+.msg-bubble{
+  max-width:78%;padding:12px 16px;border-radius:14px;font-size:13.5px;line-height:1.7;
+}
+.msg-user .msg-bubble{
+  background:linear-gradient(135deg,var(--p),#5B4FD4);color:#fff;
+  border-radius:14px 14px 2px 14px;
+}
+.msg-ai .msg-bubble{
+  background:var(--s2);border:1px solid var(--bdr);color:var(--tx);
+  border-radius:2px 14px 14px 14px;
+}
+.msg-ai .msg-bubble h1,.msg-ai .msg-bubble h2,.msg-ai .msg-bubble h3{color:var(--tx);font-size:14px;margin:10px 0 6px;}
+.msg-ai .msg-bubble strong{color:var(--p2);}
+.msg-ai .msg-bubble code{background:var(--s3);color:var(--t);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;}
+.msg-ai .msg-bubble ul,.msg-ai .msg-bubble ol{padding-left:18px;margin:6px 0;}
+.msg-ai .msg-bubble li{margin:3px 0;}
+.msg-ai .msg-bubble p{margin:4px 0;}
+
+.chat-input-area{
+  border-top:1px solid var(--bdr);padding-top:16px;
+}
+.chat-input-box{
+  display:flex;gap:10px;align-items:flex-end;
+  background:var(--s2);border:1px solid var(--bdr);
+  border-radius:14px;padding:10px 10px 10px 16px;
+  transition:border-color 0.2s;
+}
+.chat-input-box:focus-within{border-color:var(--p);box-shadow:0 0 0 3px rgba(124,110,250,0.08);}
+.chat-input-box textarea{
+  flex:1;background:none;border:none;resize:none;padding:0;
+  font-size:13.5px;color:var(--tx);max-height:120px;min-height:22px;
+  line-height:1.5;box-shadow:none !important;
+}
+.chat-send-btn{
+  width:36px;height:36px;border-radius:10px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--p),#5B4FD4);color:#fff;
+  font-size:15px;display:flex;align-items:center;justify-content:center;
+  transition:all 0.18s;flex-shrink:0;
+}
+.chat-send-btn:hover:not(:disabled){transform:scale(1.08);box-shadow:0 4px 14px rgba(124,110,250,0.4);}
+.chat-send-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+
+/* ═══════════════════════════════════════════════════
+   SHIMMER SKELETON
+═══════════════════════════════════════════════════ */
+.skeleton{
+  background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);
+  background-size:200% 100%;animation:shimmer 1.5s infinite;
+  border-radius:6px;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ═══════════════════════════════════════════════════
+   TOOL PANELS - INPUT CARD
+═══════════════════════════════════════════════════ */
+.input-card{
+  background:var(--s1);border:1px solid var(--bdr);
+  border-radius:var(--r16);padding:22px;
+  display:flex;flex-direction:column;gap:0;
+}
+.output-card{
+  background:var(--s1);border:1px solid var(--bdr);
+  border-radius:var(--r16);padding:22px;
+}
+.output-card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.output-card-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--tx);}
+
+/* ═══════════════════════════════════════════════════
+   COPY BUTTON
+═══════════════════════════════════════════════════ */
+.copy-btn{
+  font-size:11px;padding:4px 10px;border-radius:6px;
+  background:var(--s3);border:1px solid var(--bdr);color:var(--tx3);
+  cursor:pointer;font-family:'JetBrains Mono',monospace;
+  transition:all 0.15s;
+}
+.copy-btn:hover{color:var(--tx);border-color:var(--bdr2);}
+.copy-btn.copied{color:var(--gr);border-color:rgba(52,211,153,0.3);}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══════════════════════════ SIDEBAR ══════════════════════════ -->
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <h1>CareerMind AI</h1>
+    <p>DEVELOPED BY HARDIK SARVAIYA</p>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">Overview</div>
+    <button class="nav-item active" data-panel="home"      onclick="go('home')">      <span class="nav-emoji">🏠</span><span class="nav-label">Dashboard</span>   <span class="nav-badge">Home</span></button>
+    <div class="nav-section">AI Tools</div>
+    <button class="nav-item" data-panel="resume"    onclick="go('resume')">    <span class="nav-emoji">📄</span><span class="nav-label">Resume Analyzer</span></button>
+    <button class="nav-item" data-panel="skills"    onclick="go('skills')">    <span class="nav-emoji">🎯</span><span class="nav-label">Skill Gap</span></button>
+    <button class="nav-item" data-panel="roadmap"   onclick="go('roadmap')">   <span class="nav-emoji">🗺️</span><span class="nav-label">Roadmap</span></button>
+    <button class="nav-item" data-panel="interview" onclick="go('interview')"> <span class="nav-emoji">🎤</span><span class="nav-label">Interview Prep</span></button>
+    <button class="nav-item" data-panel="planner"   onclick="go('planner')">   <span class="nav-emoji">📅</span><span class="nav-label">Study Planner</span></button>
+    <button class="nav-item" data-panel="courses"   onclick="go('courses')">   <span class="nav-emoji">📚</span><span class="nav-label">Courses</span></button>
+    <button class="nav-item" data-panel="ats"       onclick="go('ats')">       <span class="nav-emoji">🤖</span><span class="nav-label">ATS Score</span></button>
+    <button class="nav-item" data-panel="linkedin"  onclick="go('linkedin')">  <span class="nav-emoji">💼</span><span class="nav-label">LinkedIn Bio</span></button>
+    <div class="nav-section">Assistant</div>
+    <button class="nav-item" data-panel="chat"      onclick="go('chat')">      <span class="nav-emoji">💬</span><span class="nav-label">AI Chat</span></button>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="footer-dot"></div>
+    <div class="footer-text"><b>Live</b> · Neural Nexus <br>Secure backend API</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ MAIN ══════════════════════════ -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-icon" id="topbar-icon">🏠</span>
+      <div>
+        <div class="topbar-title" id="panel-title">Dashboard</div>
+        <div class="topbar-sub" id="panel-sub">AI Career Mentor</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="status-pill" id="status-pill">
+        <div class="status-dot"></div>
+        <span id="status-text">Ready</span>
+      </div>
+      <div class="model-badge">CareerMind AI</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── HOME ─────────────────────────────────────────── -->
+    <div class="panel active" id="panel-home">
+      <div class="hero">
+        <div class="hero-tag">✦ AI-Powered Career Mentor</div>
+        <h2>Land Your Dream Job<br>with CareerMind AI</h2>
+        <p>Analyze resumes, detect skill gaps, generate learning roadmaps, prep for interviews, and get LinkedIn-ready — all in one place, powered by Google Gemini.</p>
+      </div>
+      <div class="grid-4" style="margin-bottom:20px;">
+        <div class="stat-card"><div class="stat-num" style="background:linear-gradient(135deg,var(--p),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">9</div><div class="stat-lbl">AI-powered tools</div></div>
+        <div class="stat-card"><div class="stat-num" style="background:linear-gradient(135deg,var(--t),#1EA896);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Live</div><div class="stat-lbl">Streaming AI output</div></div>
+        <div class="stat-card"><div class="stat-num" style="background:linear-gradient(135deg,var(--gr),#1A9E6D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🔒</div><div class="stat-lbl">Secure API backend</div></div>
+        <div class="stat-card"><div class="stat-num" style="background:linear-gradient(135deg,var(--am),#D97706);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">MD</div><div class="stat-lbl">Rich AI responses</div></div>
+      </div>
+      <div class="flow-card">
+        <div style="font-size:12px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:0.5px;">Recommended Flow</div>
+        <div class="flow-steps">
+          <div class="flow-step" onclick="go('resume')">📄 Resume</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" onclick="go('skills')">🎯 Skill Gap</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" onclick="go('roadmap')">🗺️ Roadmap</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" onclick="go('planner')">📅 Planner</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" onclick="go('interview')">🎤 Interview</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" onclick="go('ats')">🤖 ATS</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" onclick="go('linkedin')">💼 LinkedIn</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" style="background:linear-gradient(135deg,var(--p3),var(--t2));border-color:var(--pb);color:var(--p2);">🚀 Apply!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RESUME ─────────────────────────────────────────── -->
+    <div class="panel" id="panel-resume">
+      <div class="grid-2">
+        <div class="input-card">
+          <div class="card-header"><div class="card-icon">📄</div><div><div class="card-title">Your Resume</div><div class="card-sub">Paste your full resume text</div></div></div>
+          <div class="form-group"><label>Resume Content</label><textarea id="resume-text" rows="10" placeholder="Paste your complete resume here — education, experience, skills, projects, certifications..."></textarea></div>
+          <div class="form-group"><label>Target Role (optional)</label><input type="text" id="resume-role" placeholder="e.g. Backend Engineer, Data Scientist, Product Manager"/></div>
+          <button class="btn btn-primary btn-full" id="resume-btn" onclick="run('resume')">✨ Analyze My Resume</button>
+        </div>
+        <div class="output-card">
+          <div class="output-card-header">
+            <div class="output-card-title"><span>🤖</span> AI Feedback</div>
+            <button class="copy-btn" onclick="copyOutput('resume-result')">Copy</button>
+          </div>
+          <div class="ai-output" id="resume-result"><div class="ai-placeholder"><div class="ai-placeholder-icon">📄</div><div class="ai-placeholder-text">Paste your resume and click Analyze to get detailed AI feedback</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SKILL GAP ─────────────────────────────────────────── -->
+    <div class="panel" id="panel-skills">
+      <div class="grid-2">
+        <div class="input-card">
+          <div class="card-header"><div class="card-icon">🎯</div><div><div class="card-title">Skill Gap Detector</div><div class="card-sub">Find what's missing for your dream role</div></div></div>
+          <div class="form-group"><label>Your Current Skills</label><textarea id="skills-have" rows="6" placeholder="e.g. Python, SQL, basic machine learning, Excel, communication skills, Git..."></textarea></div>
+          <div class="form-group"><label>Target Job Role</label><input type="text" id="skills-role" placeholder="e.g. Machine Learning Engineer at Google"/></div>
+          <button class="btn btn-primary btn-full" id="skills-btn" onclick="run('skills')">🎯 Detect Skill Gaps</button>
+        </div>
+        <div class="output-card">
+          <div class="output-card-header">
+            <div class="output-card-title"><span>🤖</span> Gap Analysis</div>
+            <button class="copy-btn" onclick="copyOutput('skills-result')">Copy</button>
+          </div>
+          <div class="ai-output" id="skills-result"><div class="ai-placeholder"><div class="ai-placeholder-icon">🎯</div><div class="ai-placeholder-text">Enter your skills and target role to see what gaps you need to bridge</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ROADMAP ─────────────────────────────────────────── -->
+    <div class="panel" id="panel-roadmap">
+      <div class="grid-2">
+        <div class="input-card">
+          <div class="card-header"><div class="card-icon">🗺️</div><div><div class="card-title">Learning Roadmap</div><div class="card-sub">Phase-by-phase plan to reach your goal</div></div></div>
+          <div class="form-group"><label>Goal / Target Role</label><input type="text" id="rm-goal" placeholder="e.g. Full Stack Developer in 6 months"/></div>
+          <div class="form-group"><label>Current Level</label>
+            <select id="rm-level"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>
+          </div>
+          <div class="form-group"><label>Time Available Per Week</label>
+            <select id="rm-time"><option>5 hours</option><option>10 hours</option><option>20 hours</option><option>40+ hours</option></select>
+          </div>
+          <button class="btn btn-primary btn-full" id="roadmap-btn" onclick="run('roadmap')">🗺️ Generate My Roadmap</button>
+        </div>
+        <div class="output-card">
+          <div class="output-card-header">
+            <div class="output-card-title"><span>🤖</span> Your Roadmap</div>
+            <button class="copy-btn" onclick="copyOutput('roadmap-result')">Copy</button>
+          </div>
+          <div class="ai-output" id="roadmap-result"><div class="ai-placeholder"><div class="ai-placeholder-icon">🗺️</div><div class="ai-placeholder-text">Set your goal and time availability to generate a personalized roadmap</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INTERVIEW ─────────────────────────────────────────── -->
+    <div class="panel" id="panel-interview">
+      <div class="grid-2">
+        <div class="input-card">
+          <div class="card-header"><div class="card-icon">🎤</div><div><div class="card-title">Interview Prep</div><div class="card-sub">Questions + answer frameworks</div></div></div>
+          <div class="form-group"><label>Role / Domain</label><input type="text" id="int-role" placeholder="e.g. React Developer, Data Analyst, Product Manager"/></div>
+          <div class="form-group"><label>Difficulty Level</label>
+            <select id="int-level"><option>Entry Level</option><option>Mid Level</option><option>Senior Level</option></select>
+          </div>
+          <div class="form-group"><label>Question Type</label>
+            <select id="int-type"><option>Technical</option><option>Behavioural</option><option>System Design</option><option>Mixed</option></select>
+          </div>
+          <button class="btn btn-primary btn-full" id="interview-btn" onclick="run('interview')">🎤 Generate Questions</button>
+        </div>
+        <div class="output-card">
+          <div class="output-card-header">
+            <div class="output-card-title"><span>🤖</span> Questions & Frameworks</div>
+            <button class="copy-btn" onclick="copyOutput('interview-result')">Copy</button>
+          </div>
+          <div class="ai-output" id="interview-result"><div class="ai-placeholder"><div class="ai-placeholder-icon">🎤</div><div class="ai-placeholder-text">Pick your role and difficulty to get targeted interview questions</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PLANNER ─────────────────────────────────────────── -->
+    <div class="panel" id="panel-planner">
+      <div class="grid-2">
+        <div class="input-card">
+          <div class="card-header"><div class="card-icon">📅</div><div><div class="card-title">Daily Study Planner</div><div class="card-sub">Week-by-week learning schedule</div></div></div>
+          <div class="form-group"><label>What You're Learning</label><input type="text" id="plan-topic" placeholder="e.g. React + Node.js + AWS Cloud"/></div>
+          <div class="form-group"><label>Hours Per Day</label>
+            <select id="plan-hours"><option>1 hour</option><option>2 hours</option><option>3 hours</option><option>4+ hours</option></select>
+          </div>
+          <div class="form-group"><label>Target Deadline</label><input type="text" id="plan-deadline" placeholder="e.g. 3 months, by September 2025"/></div>
+          <button class="btn btn-primary btn-full" id="planner-btn" onclick="run('planner')">📅 Build My Study Plan</button>
+        </div>
+        <div class="output-card">
+          <div class="output-card-header">
+            <div class="output-card-title"><span>🤖</span> Your Study Plan</div>
+            <button class="copy-btn" onclick="copyOutput('planner-result')">Copy</button>
+          </div>
+          <div class="ai-output" id="planner-result"><div class="ai-placeholder"><div class="ai-placeholder-icon">📅</div><div class="ai-placeholder-text">Tell me what you're learning and I'll build a realistic daily schedule</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── COURSES ─────────────────────────────────────────── -->
+    <div class="panel" id="panel-courses">
+      <div class="grid-2">
+        <div class="input-card">
+          <div class="card-header"><div class="card-icon">📚</div><div><div class="card-title">Course Finder</div><div class="card-sub">Best resources curated for you</div></div></div>
+          <div class="form-group"><label>Skill to Learn</label><input type="text" id="course-skill" placeholder="e.g. Machine Learning, DevOps, UI/UX Design"/></div>
+          <div class="form-group"><label>Format Preference</label>
+            <select id="course-format"><option>Any</option><option>Free</option><option>Video-based</option><option>Project-based</option><option>Certification</option></select>
+          </div>
+          <div class="form-group"><label>Your Level</label>
+            <select id="course-level"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>
+          </div>
+          <button class="btn btn-primary btn-full" id="courses-btn" onclick="run('courses')">📚 Find Best Courses</button>
+        </div>
+        <div class="output-card">
+          <div class="output-card-header">
+            <div class="output-card-title"><span>🤖</span> Recommendations</div>
+            <button class="copy-btn" onclick="copyOutput('courses-result')">Copy</button>
+          </div>
+          <div class="ai-output" id="courses-result"><div class="ai-placeholder"><div class="ai-placeholder-icon">📚</div><div class="ai-placeholder-text">Enter a skill to get curated course recommendations from top platforms</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ATS ─────────────────────────────────────────── -->
+    <div class="panel" id="panel-ats">
+      <div class="grid-2">
+        <div class="input-card">
+          <div class="card-header"><div class="card-icon">🤖</div><div><div class="card-title">ATS Score Checker</div><div class="card-sub">Beat the robot screener</div></div></div>
+          <div class="form-group"><label>Resume Text</label><textarea id="ats-resume" rows="7" placeholder="Paste your resume text here..."></textarea></div>
+          <div class="form-group"><label>Job Description (optional)</label><textarea id="ats-jd" rows="4" placeholder="Paste the target job description to check keyword match..."></textarea></div>
+          <button class="btn btn-primary btn-full" id="ats-btn" onclick="run('ats')">🤖 Check ATS Score</button>
+        </div>
+        <div class="output-card">
+          <div class="output-card-header">
+            <div class="output-card-title"><span>🤖</span> ATS Analysis</div>
+            <button class="copy-btn" onclick="copyOutput('ats-result')">Copy</button>
+          </div>
+          <div id="ats-score-section" style="display:none;">
+            <div class="ats-score-wrap">
+              <div class="ats-ring-container">
+                <svg width="130" height="130" viewBox="0 0 130 130">
+                  <circle cx="65" cy="65" r="54" fill="none" stroke="var(--bdr2)" stroke-width="10"/>
+                  <circle id="ats-arc" cx="65" cy="65" r="54" fill="none"
+                    stroke="url(#ats-grad)" stroke-width="10" stroke-linecap="round"
+                    stroke-dasharray="339.3" stroke-dashoffset="339.3"
+                    style="transform-origin:65px 65px;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)"/>
+                  <defs>
+                    <linearGradient id="ats-grad" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stop-color="#7C6EFA"/>
+                      <stop offset="100%" stop-color="#2DD4BF"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="ats-center">
+                  <div class="ats-score-num" id="ats-score-num">—</div>
+                  <div class="ats-score-label">ATS Score</div>
+                </div>
+              </div>
+              <div class="ats-grade" id="ats-grade"></div>
+            </div>
+          </div>
+          <div class="ai-output" id="ats-result" style="min-height:100px;"><div class="ai-placeholder"><div class="ai-placeholder-icon">🤖</div><div class="ai-placeholder-text">Paste your resume (and optionally a job description) to get your ATS score</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LINKEDIN ─────────────────────────────────────────── -->
+    <div class="panel" id="panel-linkedin">
+      <div class="grid-2">
+        <div class="input-card">
+          <div class="card-header"><div class="card-icon">💼</div><div><div class="card-title">LinkedIn Bio Generator</div><div class="card-sub">Profile that attracts recruiters</div></div></div>
+          <div class="form-group"><label>Your Name</label><input type="text" id="li-name" placeholder="e.g. Hardik Shah"/></div>
+          <div class="form-group"><label>Role / Title</label><input type="text" id="li-role" placeholder="e.g. Full Stack Developer | AI Enthusiast"/></div>
+          <div class="form-group"><label>Skills & Achievements</label><textarea id="li-info" rows="4" placeholder="e.g. 3 years web dev, built 5+ apps, AI/ML enthusiast, open source contributor, top 10% on LeetCode..."></textarea></div>
+          <div class="form-group"><label>Tone</label>
+            <select id="li-tone"><option>Professional</option><option>Creative</option><option>Casual</option><option>Ambitious</option></select>
+          </div>
+          <button class="btn btn-primary btn-full" id="linkedin-btn" onclick="run('linkedin')">💼 Generate LinkedIn Bio</button>
+        </div>
+        <div class="output-card">
+          <div class="output-card-header">
+            <div class="output-card-title"><span>💼</span> Your LinkedIn About</div>
+            <button class="copy-btn" onclick="copyOutput('linkedin-result')">Copy</button>
+          </div>
+          <div class="ai-output" id="linkedin-result"><div class="ai-placeholder"><div class="ai-placeholder-icon">💼</div><div class="ai-placeholder-text">Fill in your details to generate an optimized LinkedIn About section</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CHAT ─────────────────────────────────────────── -->
+    <div class="panel" id="panel-chat">
+      <div class="chat-wrap">
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg msg-ai">
+            <div class="msg-avatar">⚡</div>
+            <div class="msg-bubble">
+              <strong>Hey! I'm CareerMind AI 👋</strong><br><br>
+              I'm your personal AI career mentor. Ask me anything about:<br>
+              • 💼 Job searching & applications<br>
+              • 🎤 Interview prep & common questions<br>
+              • 💰 Salary negotiation tactics<br>
+              • 🔄 Career switching strategies<br>
+              • 📈 Skill development & growth<br><br>
+              What career challenge can I help you with today?
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <div class="chat-input-box">
+            <textarea id="chat-input" rows="1" placeholder="Ask anything about your career..." onkeydown="chatKey(event)" oninput="autoResize(this)"></textarea>
+            <button class="chat-send-btn" id="chat-btn" onclick="sendChat()" title="Send (Enter)">↗</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+/* ═══════════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════════ */
+'use strict';
+
+const API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:8000' : '';
+
+// No highlight callback in marked — applying hljs during streaming is O(n²)
+// and freezes the JS main thread, causing the browser to drop incoming bytes.
+// Highlighting is applied exactly once, after the stream ends.
+marked.setOptions({ breaks: true, gfm: true });
+
+/* ═══════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════ */
+const META = {
+  home:      { title: 'Dashboard',            sub: 'AI Career Mentor',               icon: '🏠' },
+  resume:    { title: 'Resume Analyzer',      sub: 'Get detailed AI feedback',       icon: '📄' },
+  skills:    { title: 'Skill Gap Detector',   sub: 'Find what you are missing',      icon: '🎯' },
+  roadmap:   { title: 'Roadmap Generator',    sub: 'Phase-by-phase learning plan',   icon: '🗺️' },
+  interview: { title: 'Interview Prep',       sub: 'Questions and frameworks',       icon: '🎤' },
+  planner:   { title: 'Study Planner',        sub: 'Week-by-week schedule',          icon: '📅' },
+  courses:   { title: 'Course Finder',        sub: 'Curated recommendations',        icon: '📚' },
+  ats:       { title: 'ATS Score Checker',    sub: 'Beat the robot screener',        icon: '🤖' },
+  linkedin:  { title: 'LinkedIn Bio',         sub: 'Profile that attracts recruiters', icon: '💼' },
+  chat:      { title: 'AI Career Chat',       sub: 'Ask me anything',                icon: '💬' },
+};
+
+function go(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelector(`[data-panel="${id}"]`).classList.add('active');
+  const m = META[id];
+  document.getElementById('panel-title').textContent = m.title;
+  document.getElementById('panel-sub').textContent   = m.sub;
+  document.getElementById('topbar-icon').textContent = m.icon;
+}
+
+/* ═══════════════════════════════════════════════════
+   STATUS BAR
+═══════════════════════════════════════════════════ */
+function setStatus(state, text) {
+  const pill = document.getElementById('status-pill');
+  const dot  = pill.querySelector('.status-dot');
+  document.getElementById('status-text').textContent = text;
+  pill.className = 'status-pill' + (state ? ' ' + state : '');
+  dot.className  = 'status-dot'  + (state === 'generating' ? ' spin' : '');
+}
+
+/* ═══════════════════════════════════════════════════
+   MARKDOWN + SYNTAX HIGHLIGHTING
+
+   renderMD  — called during streaming (NO hljs, fast)
+   finalRender — called once after stream ends (WITH hljs)
+
+   Keeping these separate is the key correctness decision:
+   hljs.highlightElement() is synchronous and expensive.
+   Calling it on every chunk freezes the main thread and
+   causes the browser to buffer and then drop incoming SSE
+   bytes, producing apparent truncation on long responses.
+═══════════════════════════════════════════════════ */
+function renderMD(el, raw) {
+  el.innerHTML = marked.parse(raw);
+}
+
+function finalRender(el, raw) {
+  el.innerHTML = marked.parse(raw);
+  // Run hljs in a rAF so it never blocks the call stack
+  requestAnimationFrame(() => {
+    el.querySelectorAll('pre code:not(.hljs)').forEach(block => hljs.highlightElement(block));
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   THROTTLED LIVE RENDER
+
+   BUG FIXED: renderMD was previously called on every
+   single chunk inside readSSEStream. For a 300-chunk
+   response this means 300 marked.parse() calls, each
+   parsing a progressively longer string — O(n²) total.
+   At ~chunk 50-100 the main thread stalls long enough
+   that the browser's internal ReadableStream buffer
+   fills up and bytes are silently dropped.
+
+   Fix: we schedule renders via requestAnimationFrame.
+   rAF fires at most once per display frame (~16ms).
+   No matter how fast Gemini sends chunks, the DOM is
+   updated at most 60 times per second. All chunks are
+   still accumulated in state.rawText — nothing is lost.
+═══════════════════════════════════════════════════ */
+function makeThrottledRenderer(el) {
+  let rafId     = null;
+  let lastRaw   = '';
+
+  return {
+    // Call this with the latest rawText on every chunk
+    schedule(raw) {
+      lastRaw = raw;
+      if (rafId === null) {
+        rafId = requestAnimationFrame(() => {
+          rafId = null;
+          renderMD(el, lastRaw);
+          el.scrollTop = el.scrollHeight;
+        });
+      }
+    },
+    // Call this after stream ends to flush any pending render
+    flush(raw) {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      if (raw) {
+        finalRender(el, raw);
+        el.scrollTop = el.scrollHeight;
+      }
+    },
+  };
+}
+
+/* ═══════════════════════════════════════════════════
+   SSE LINE PARSER
+
+   Accepts one SSE line ("data: ...") and mutates state.
+   Extracted to top level so it is never re-declared
+   inside a loop or after a return statement.
+
+   state shape: {
+     rawText:    string   — accumulated response text
+     streamDone: boolean  — true when [DONE] received
+     hasError:   string|null
+   }
+═══════════════════════════════════════════════════ */
+function parseSseLine(line, state) {
+  if (!line.startsWith('data: ')) return;
+  const payload = line.slice(6).trim();
+
+  if (payload === '[DONE]') {
+    state.streamDone = true;
+    return;
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(payload);
+  } catch {
+    // Partial JSON from a split TCP packet — safe to skip,
+    // the next chunk will complete it (SSE lines are atomic)
+    return;
+  }
+
+  if (parsed.error) {
+    state.hasError = parsed.error;
+    return;
+  }
+  if (typeof parsed.text === 'string' && parsed.text) {
+    state.rawText += parsed.text;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   CORE SSE STREAM READER
+
+   All previously-identified bugs are fixed here:
+
+   BUG 1 FIXED — decoder.decode(undefined) crashed Firefox.
+     The W3C Encoding spec says the argument to decode()
+     must be BufferSource | undefined but passing undefined
+     explicitly triggers a TypeError in Firefox 115 and
+     Safari 17. Fix: call decoder.decode() with NO argument
+     when flushing (the default behaviour is to flush).
+
+   BUG 2 FIXED — renderMD called every chunk (O(n²)).
+     Replaced with throttledRenderer.schedule() which
+     batches DOM writes to one per animation frame.
+
+   BUG 3 FIXED — box cleared before first chunk.
+     We now keep the "thinking" indicator until the first
+     actual text chunk arrives, then clear it exactly once.
+
+   The state.streamDone flag (checked by while condition
+   AND inner for-loop guard) is the correct mechanism for
+   stopping both loops without issuing extra reader.read()
+   calls after [DONE].
+═══════════════════════════════════════════════════ */
+async function readSSEStream(reader, state, renderer) {
+  // BUG 1 FIX: do not pass `undefined` explicitly — call with no args to flush
+  const decoder   = new TextDecoder('utf-8', { fatal: false });
+  let   buffer    = '';
+  let   firstChunk = true;          // used by streamToOutput to clear thinking UI
+
+  while (!state.streamDone) {
+    let done, value;
+    try {
+      ({ done, value } = await reader.read());
+    } catch (netErr) {
+      state.hasError = netErr.message;
+      break;
+    }
+
+    if (done) {
+      // BUG 1 FIX: decoder.decode() with no argument flushes internal state
+      const tail = decoder.decode();   // ← no arg, not undefined
+      buffer += tail;
+      // Process every remaining line in buffer (including final [DONE])
+      const finalLines = buffer.split('\n');
+      for (const line of finalLines) {
+        if (line.trim()) parseSseLine(line, state);
+      }
+      break;
+    }
+
+    buffer += decoder.decode(value, { stream: true });
+
+    // Split on \n — SSE events are separated by \n\n so splitting on every \n
+    // means each "data: ..." line is processed individually.  The last element
+    // of the split may be an incomplete line so we hold it in buffer.
+    const lines = buffer.split('\n');
+    buffer = lines.pop(); // keep last (possibly partial) line in buffer
+
+    for (const line of lines) {
+      if (state.streamDone) break;
+      parseSseLine(line, state);
+    }
+
+    // BUG 2 FIX: throttled render — one DOM write per animation frame max
+    if (state.rawText) {
+      if (firstChunk && renderer) {
+        renderer.clearThinking();   // clear "AI is thinking..." on first real text
+        firstChunk = false;
+      }
+      if (renderer) renderer.schedule(state.rawText);
+    }
+  }
+
+  // Flush any pending rAF render and apply syntax highlighting
+  if (renderer) renderer.flush(state.rawText);
+
+  try { reader.cancel(); } catch { /* ignore */ }
+}
+
+/* ═══════════════════════════════════════════════════
+   streamToOutput — shared by all 8 tool panels
+═══════════════════════════════════════════════════ */
+async function streamToOutput(endpoint, body, outputId, onChunkCb) {
+  const box = document.getElementById(outputId);
+
+  // Show thinking indicator — kept until first real chunk (BUG 3 FIX)
+  box.innerHTML = `
+    <div class="thinking">
+      <div class="thinking-icon">🤖</div>
+      <div>
+        <div class="thinking-dots"><span></span><span></span><span></span></div>
+        <div class="thinking-text" style="margin-top:6px">AI is thinking...</div>
+      </div>
+    </div>`;
+  box.classList.add('streaming');
+  setStatus('generating', 'Generating...');
+
+  const state = { rawText: '', streamDone: false, hasError: null };
+
+  // Build a renderer that knows about this box and optional onChunkCb
+  const renderer = {
+    _rafId: null,
+    _lastRaw: '',
+    clearThinking() { box.innerHTML = ''; },
+    schedule(raw) {
+      this._lastRaw = raw;
+      if (onChunkCb) onChunkCb(raw);           // e.g. ATS score extractor
+      if (this._rafId === null) {
+        this._rafId = requestAnimationFrame(() => {
+          this._rafId = null;
+          renderMD(box, this._lastRaw);
+          box.scrollTop = box.scrollHeight;
+        });
+      }
+    },
+    flush(raw) {
+      if (this._rafId !== null) { cancelAnimationFrame(this._rafId); this._rafId = null; }
+      if (raw) {
+        finalRender(box, raw);
+        box.scrollTop = box.scrollHeight;
+      }
+    },
+  };
+
+  try {
+    const res = await fetch(API + endpoint, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const errText = await res.text().catch(() => res.statusText);
+      box.innerHTML = `<div style="color:var(--rd);padding:16px">❌ HTTP ${res.status}: ${errText}</div>`;
+      box.classList.remove('streaming');
+      setStatus('error', 'Error');
+      return '';
+    }
+
+    await readSSEStream(res.body.getReader(), state, renderer);
+
+  } catch (err) {
+    box.innerHTML = `<div style="color:var(--rd);padding:16px">❌ ${err.message}</div>`;
+    box.classList.remove('streaming');
+    setStatus('error', 'Error');
+    return '';
+  }
+
+  if (state.hasError && !state.rawText) {
+    box.innerHTML = `<div style="color:var(--rd);padding:16px">❌ ${state.hasError}</div>`;
+  }
+
+  box.classList.remove('streaming');
+  setStatus('done', 'Done ✓');
+  setTimeout(() => setStatus('', 'Ready'), 2500);
+  return state.rawText;
+}
+
+/* ═══════════════════════════════════════════════════
+   BUTTON HELPERS
+═══════════════════════════════════════════════════ */
+function btnLoad(id, label = '⏳ Generating...') {
+  const b = document.getElementById(id);
+  b._orig = b.textContent;
+  b.disabled = true;
+  b.textContent = label;
+}
+function btnReset(id) {
+  const b = document.getElementById(id);
+  b.disabled = false;
+  b.textContent = b._orig || 'Run';
+}
+
+/* ═══════════════════════════════════════════════════
+   COPY OUTPUT
+═══════════════════════════════════════════════════ */
+function copyOutput(id) {
+  const box  = document.getElementById(id);
+  const text = box.innerText || box.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = box.closest('.output-card')?.querySelector('.copy-btn');
+    if (btn) {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   ATS SCORE RING
+═══════════════════════════════════════════════════ */
+function updateATSRing(score) {
+  const circumference = 339.3;
+  const offset = circumference - (circumference * score / 100);
+  document.getElementById('ats-arc').style.strokeDashoffset = offset;
+  document.getElementById('ats-score-num').textContent = score + '/100';
+  document.getElementById('ats-score-section').style.display = 'block';
+  const grade = document.getElementById('ats-grade');
+  if (score >= 80) {
+    grade.textContent = 'Excellent 🟢';
+    grade.style.cssText = 'background:rgba(52,211,153,0.12);color:var(--gr)';
+  } else if (score >= 60) {
+    grade.textContent = 'Good 🟡';
+    grade.style.cssText = 'background:rgba(251,191,36,0.12);color:var(--am)';
+  } else {
+    grade.textContent = 'Needs Work 🔴';
+    grade.style.cssText = 'background:rgba(248,113,113,0.12);color:var(--rd)';
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   TOOL RUNNERS
+═══════════════════════════════════════════════════ */
+async function run(type) {
+  const handlers = {
+
+    resume: async () => {
+      const resume = document.getElementById('resume-text').value.trim();
+      if (!resume) return toast('Please paste your resume first.');
+      const role = document.getElementById('resume-role').value.trim();
+      btnLoad('resume-btn');
+      await streamToOutput('/api/resume', { resume, role }, 'resume-result');
+      btnReset('resume-btn');
+    },
+
+    skills: async () => {
+      const skills = document.getElementById('skills-have').value.trim();
+      const role   = document.getElementById('skills-role').value.trim();
+      if (!skills || !role) return toast('Please fill in both fields.');
+      btnLoad('skills-btn');
+      await streamToOutput('/api/skill-gap', { skills, role }, 'skills-result');
+      btnReset('skills-btn');
+    },
+
+    roadmap: async () => {
+      const goal  = document.getElementById('rm-goal').value.trim();
+      if (!goal) return toast('Please enter your goal.');
+      const level = document.getElementById('rm-level').value;
+      const hours = document.getElementById('rm-time').value;
+      btnLoad('roadmap-btn');
+      await streamToOutput('/api/roadmap', { goal, level, hours_per_week: hours }, 'roadmap-result');
+      btnReset('roadmap-btn');
+    },
+
+    interview: async () => {
+      const role = document.getElementById('int-role').value.trim();
+      if (!role) return toast('Please enter a role.');
+      const level         = document.getElementById('int-level').value;
+      const question_type = document.getElementById('int-type').value;
+      btnLoad('interview-btn');
+      await streamToOutput('/api/interview', { role, level, question_type }, 'interview-result');
+      btnReset('interview-btn');
+    },
+
+    planner: async () => {
+      const topic = document.getElementById('plan-topic').value.trim();
+      if (!topic) return toast('Please enter what you are learning.');
+      const hours    = document.getElementById('plan-hours').value;
+      const deadline = document.getElementById('plan-deadline').value.trim();
+      btnLoad('planner-btn');
+      await streamToOutput('/api/planner', { topic, hours_per_day: hours, deadline }, 'planner-result');
+      btnReset('planner-btn');
+    },
+
+    courses: async () => {
+      const skill = document.getElementById('course-skill').value.trim();
+      if (!skill) return toast('Please enter a skill to search.');
+      const format = document.getElementById('course-format').value;
+      const level  = document.getElementById('course-level').value;
+      btnLoad('courses-btn');
+      await streamToOutput('/api/courses', { skill, format, level }, 'courses-result');
+      btnReset('courses-btn');
+    },
+
+    ats: async () => {
+      const resume = document.getElementById('ats-resume').value.trim();
+      if (!resume) return toast('Please paste your resume.');
+      const job_description = document.getElementById('ats-jd').value.trim();
+      document.getElementById('ats-score-section').style.display = 'none';
+      btnLoad('ats-btn');
+      await streamToOutput('/api/ats', { resume, job_description }, 'ats-result', (text) => {
+        const m = text.match(/SCORE:\s*(\d+)/i);
+        if (m) updateATSRing(parseInt(m[1], 10));
+      });
+      btnReset('ats-btn');
+    },
+
+    linkedin: async () => {
+      const role = document.getElementById('li-role').value.trim();
+      const info = document.getElementById('li-info').value.trim();
+      if (!role || !info) return toast('Please fill in your role and background.');
+      const name = document.getElementById('li-name').value.trim();
+      const tone = document.getElementById('li-tone').value;
+      btnLoad('linkedin-btn');
+      await streamToOutput('/api/linkedin', { name, role, info, tone }, 'linkedin-result');
+      btnReset('linkedin-btn');
+    },
+  };
+
+  try {
+    await handlers[type]?.();
+  } catch (e) {
+    setStatus('error', 'Error');
+    toast('Something went wrong: ' + e.message);
+    const btnIds = {
+      resume: 'resume-btn', skills: 'skills-btn', roadmap: 'roadmap-btn',
+      interview: 'interview-btn', planner: 'planner-btn', courses: 'courses-btn',
+      ats: 'ats-btn', linkedin: 'linkedin-btn',
+    };
+    if (btnIds[type]) btnReset(btnIds[type]);
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   CHAT
+
+   BUG FIXED: wall.innerHTML += re-serialised the entire
+   chat DOM on every send, which detached previously-held
+   element references (the `bubble` node went stale and
+   updates were silently written to a detached subtree).
+   Fix: always use createElement + appendChild.
+
+   BUG FIXED: bubble.innerHTML = marked.parse() was called
+   on every single token inside the stream loop — same O(n²)
+   problem as tool panels. Now uses a rAF-throttled renderer.
+═══════════════════════════════════════════════════ */
+let chatHistory = [];
+
+function chatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function appendMsg(wall, role, html) {
+  const wrap = document.createElement('div');
+  wrap.className = 'msg msg-' + role;
+  wrap.innerHTML = `
+    <div class="msg-avatar">${role === 'user' ? '👤' : '⚡'}</div>
+    <div class="msg-bubble">${html}</div>`;
+  wall.appendChild(wrap);
+  wall.scrollTop = wall.scrollHeight;
+  return wrap.querySelector('.msg-bubble');
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg   = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  input.style.height = 'auto';
+
+  const wall = document.getElementById('chat-messages');
+  appendMsg(wall, 'user', escapeHtml(msg));
+
+  const bubble = appendMsg(wall, 'ai', `
+    <div class="thinking-dots" style="padding:4px 0">
+      <span></span><span></span><span></span>
+    </div>`);
+
+  chatHistory.push({ role: 'user', content: msg });
+  document.getElementById('chat-btn').disabled = true;
+  setStatus('generating', 'Typing...');
+
+  const state = { rawText: '', streamDone: false, hasError: null };
+
+  // rAF-throttled renderer for the chat bubble (BUG FIX)
+  let   rafId   = null;
+  let   lastRaw = '';
+  const chatRenderer = {
+    _first: true,
+    clearThinking() { bubble.innerHTML = ''; this._first = false; },
+    schedule(raw) {
+      lastRaw = raw;
+      if (rafId === null) {
+        rafId = requestAnimationFrame(() => {
+          rafId = null;
+          bubble.innerHTML = marked.parse(lastRaw);
+          wall.scrollTop = wall.scrollHeight;
+        });
+      }
+    },
+    flush(raw) {
+      if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+      if (raw) {
+        finalRender(bubble, raw);
+        wall.scrollTop = wall.scrollHeight;
+      }
+    },
+  };
+
+  try {
+    const res = await fetch(API + '/api/chat', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ messages: chatHistory }),
+    });
+
+    if (!res.ok) {
+      bubble.innerHTML = `<span style="color:var(--rd)">❌ HTTP ${res.status}</span>`;
+      document.getElementById('chat-btn').disabled = false;
+      setStatus('', 'Ready');
+      return;
+    }
+
+    await readSSEStream(res.body.getReader(), state, chatRenderer);
+
+  } catch (e) {
+    bubble.innerHTML = `<span style="color:var(--rd)">❌ ${e.message}</span>`;
+  }
+
+  if (state.hasError && !state.rawText) {
+    bubble.innerHTML = `<span style="color:var(--rd)">❌ ${state.hasError}</span>`;
+  }
+
+  if (state.rawText) {
+    chatHistory.push({ role: 'assistant', content: state.rawText });
+  }
+
+  document.getElementById('chat-btn').disabled = false;
+  setStatus('', 'Ready');
+  wall.scrollTop = wall.scrollHeight;
+}
+
+/* ═══════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════ */
+function toast(msg) {
+  const el = document.createElement('div');
+  el.textContent = msg;
+  Object.assign(el.style, {
+    position: 'fixed', bottom: '24px', right: '24px', zIndex: '9999',
+    background: 'var(--s3)', border: '1px solid var(--bdr2)', color: 'var(--tx)',
+    padding: '12px 20px', borderRadius: '10px', fontSize: '13px',
+    boxShadow: 'var(--sh2)', fontFamily: 'Space Grotesk,sans-serif',
+    animation: 'fadeSlide 0.25s ease', maxWidth: '320px',
+  });
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+/* ═══════════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════════ */
+function escapeHtml(s) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+</script>
+</body>
+</html>
