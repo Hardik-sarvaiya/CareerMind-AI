@@ -58,7 +58,7 @@ pip install -r backend/requirements.txt
 uvicorn backend.main:app --reload --port 8000
 ```
 
-Visit: http://localhost:8000
+Visit: https://careermind-ai-seven.vercel.app/
 
 ---
 
@@ -70,8 +70,7 @@ docker build -t careermind-ai .
 docker run -p 8000:8000 -e GEMINI_API_KEY=your-key-here careermind-ai
 ```
 
-Visit: http://localhost:8000
-
+Visit: https://careermind-ai-seven.vercel.app
 ---
 
 ## AWS Deployment (App Runner via ECR)
